@@ -13,8 +13,8 @@ def index():
 
 @app.route("/")
 def display():
-    return render_template('signup_form.html', user_name=user_name, user_password=user_password,
-    user_verify=user_verify, user_email=user_email, user_error='', password_error='', 
+    return render_template('signup_form.html', user_name='', user_password='',
+    user_verify='', user_email='', user_error='', password_error='', 
     verify_error='', email_error='')
 
 @app.route("/", methods=['POST'])
@@ -38,10 +38,14 @@ def welcome():
             user_error = 'User name must be longer than 3 and shorter than 20 characters.'
         else:
             user_name=user_name
-            if re.search(r'\s',user_name):
-                user_error = 'Please do not use a space.'
-            else:
-                user_name=user_name
+            if user_name:
+                for x in user_name:
+                    if x.isspace():
+                        user_error = 'Please do not use a space.'
+           #if re.search(r'\s',user_name):
+                    else:
+                        user_name=user_name
+
     if user_password == '':
         password_error = 'Please do not leave an empty field.'
     else:
@@ -50,10 +54,14 @@ def welcome():
             password_error = 'User name must be longer than 3 and shorter than 20 characters.'
         else:
             user_password=user_password
-            if re.search(r'\s', user_password):
-                password_error = 'Please do not use a space'
-            else:
-                user_password=user_password
+            if user_password:
+                for x in user_password:
+                    if x.isspace():
+                        password_error = 'Please do not use a space'
+            # if re.search(r'\s', user_password):
+                    else:
+                        user_password=user_password
+
     if user_verify == '':
         verify_error = 'Please do not leave an empty field.'
     else:
@@ -62,14 +70,21 @@ def welcome():
             verify_error = 'Password must match.'
         else:
             user_verify=user_verify
-    if not re.match(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]*$',user_email):
-        email_error = 'Invalid Email.'
-    else:
+
+    if user_email == '':
         user_email=user_email
-        if len(user_email) < 3 or len(user_email) > 20:
-            email_error = 'Email must be longer than 3 and shorter than 20 characters.'
+    else:
+        if '@' not in user_email:
+            email_error = 'Missing an "@"'
+        elif '.' not in user_email:
+            email_error = 'Missing an "."'
         else:
             user_email=user_email
+            if len(user_email) < 3 or len(user_email) > 20:
+                email_error = 'Email must be longer than 3 and shorter than 20 characters.'
+            else:
+                user_email=user_email
+
     if not user_error and not password_error and not verify_error and not email_error:
         return render_template('welcome.html', name=user_name)
     else:
