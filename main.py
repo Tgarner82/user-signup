@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, render_template
 import cgi
 import os
-import re
+#import re
 
 
 app = Flask(__name__)
@@ -37,14 +37,14 @@ def welcome():
         if len(user_name) < 3 or len(user_name) > 20:
             user_error = 'User name must be longer than 3 and shorter than 20 characters.'
         else:
-            user_name=user_name
+            user_name = user_name
             if user_name:
                 for x in user_name:
                     if x.isspace():
                         user_error = 'Please do not use a space.'
            #if re.search(r'\s',user_name):
                     else:
-                        user_name=user_name
+                        user_name = user_name
 
     if user_password == '':
         password_error = 'Please do not leave an empty field.'
@@ -52,22 +52,26 @@ def welcome():
         user_password=user_password
         if len(user_password) < 3 or len(user_password) > 20:
             password_error = 'User name must be longer than 3 and shorter than 20 characters.'
+            password_error =''
         else:
             user_password=user_password
             if user_password:
                 for x in user_password:
                     if x.isspace():
                         password_error = 'Please do not use a space'
+                        password_error =''
             # if re.search(r'\s', user_password):
                     else:
                         user_password=user_password
 
     if user_verify == '':
         verify_error = 'Please do not leave an empty field.'
+        verify_error = ''
     else:
         user_verify=user_verify
         if user_verify != user_password:
             verify_error = 'Password must match.'
+            verify_error = ''
         else:
             user_verify=user_verify
 
@@ -89,7 +93,7 @@ def welcome():
         return render_template('welcome.html', name=user_name)
     else:
         return render_template('signup_form.html', user_error=user_error, password_error=password_error, 
-        verify_error=verify_error, email_error=email_error)
+        verify_error=verify_error, email_error=email_error, user_name=user_name, user_email=user_email)
 
     
              
